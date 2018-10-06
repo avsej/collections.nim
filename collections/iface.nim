@@ -63,7 +63,7 @@ proc parseInterfaceBody(body: NimNode): seq[InterfaceFunc] {.compiletime.} =
       else:
         error("invalid declaration")
 
-      funcName = newIdentNode($funcName.ident)
+      funcName = newIdentNode($funcName)
 
       result.add((funcName, args, ret).InterfaceFunc)
     elif arg.kind == nnkCommand:
@@ -78,11 +78,11 @@ proc parseInterfaceName(nameExpr: NimNode): tuple[nameStr: string, genericParams
   var nameStr: string
 
   if nameExpr.kind == nnkBracketExpr:
-    nameStr = $nameExpr[0].ident
+    nameStr = $nameExpr[0]
     for node in nameExpr: genericParams.add node
     genericParams.del(0)
   else:
-    nameStr = $nameExpr.ident
+    nameStr = $nameExpr
 
   return (nameStr, genericParams)
 
@@ -143,7 +143,7 @@ macro interfaceMethods*(nameExpr: untyped, body: untyped): untyped =
 
     # Generate functions in vtable type
     let vtableArgs = newNimNode(nnkFormalParams).add(ret)
-    vtableArgs.add(newNimNode(nnkIdentDefs).add(newIdentNode(!"self"), newIdentNode(!"RootRef"), newEmptyNode()))
+    vtableArgs.add(newNimNode(nnkIdentDefs).add(newIdentNode("self"), newIdentNode("RootRef"), newEmptyNode()))
     for arg in args:
       vtableArgs.add(newNimNode(nnkIdentDefs).add(arg[0], arg[1], newEmptyNode()))
 

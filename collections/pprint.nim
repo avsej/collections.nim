@@ -1,5 +1,5 @@
 ## This module provides `pprint` function that handles pretty printing of objects.
-import typetraits, future, strutils, macros, tables
+import typetraits, sugar, strutils, macros, tables
 import collections/iterate, collections/macrotool
 
 template compilesOr(obj, otherwise): untyped =
@@ -67,7 +67,6 @@ proc pprintObject[T](prefix: string, obj: T): string =
   return pprintPairs(prefix & name(T), objFields(obj))
 
 proc pprint*(obj: string): string =
-  if obj == nil: return "nil"
   result = "\""
   for ch in obj:
     # TODO

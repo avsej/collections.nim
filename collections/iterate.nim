@@ -68,9 +68,8 @@ staticAssert(seq[int] is Iterable[int], "seq is not iterable")
 staticAssert(seq[int] is Iterable, "seq is not iterable (generic)")
 staticAssert(not (seq[int] is Iterable[string]), "seq[int] is string iterable!")
 
-proc next*[T](i: Iterator[T]): Option[T] =
+proc next*[T](it: Iterator[T]): Option[T] =
   ## Advances the iterator and return next item or `none[T]` if there are no more items.
-  let it = (iterator(): T)(i)
   let v = it()
   if finished(it):
     return none(T)
@@ -174,7 +173,7 @@ proc someTrue*(i: Iterable[bool]): bool =
   for item in i:
     result = result or item
 
-template iteratorToSeq*(iter: untyped): expr =
+template iteratorToSeq*(iter: untyped): untyped =
   var res: seq[type(iter)] = @[]
   for x in iter:
     res.add(x)
@@ -205,7 +204,7 @@ proc argmax*[T](s: seq[T]): int =
       maxArg = i
       maxItem = s[i]
   return maxArg
-  
+
 when isMainModule:
   iterator foo(foo: int): int {.multifuncIterator.} =
      yield foo
@@ -219,6 +218,9 @@ when isMainModule:
 
   iterator foo1[T](foo: T): int {.multifuncIterator.} =
      yield foo
+
+  for i in foo1(5):
+    assert i == 5
 
   assert flatten(@[@[1], @[2, 3]]).toSeq == @[1, 2, 3]
   assert grouping(@[1, 2, 3, 4, 5], 2).toSeq == @[@[1, 2], @[3, 4], @[5]]

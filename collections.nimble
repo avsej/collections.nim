@@ -4,4 +4,4 @@ description   = "Various collections and utilities"
 license       = "MIT"
 skipDirs      = @["examples", "doc", "tests"]
 
-requires "nim >= 0.18.0"
+requires "nim >= 0.19.0"
